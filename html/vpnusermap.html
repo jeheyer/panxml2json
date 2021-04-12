@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Current VPN user map</title>
+  <meta http-equiv="Cache-Control" content="no-cache"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0" />
+  <style> #map { height: 95%; } html,body { height: 100%; }</style>
+</head>
+<body>
+<script>
+	
+  // Google maps API requires HTTPS refer
+  if (location.protocol !== 'https:' ) {
+    // Form HTTPS URL and redirect to it
+    let newURL = 'https://' + window.location.hostname + window.location.pathname + window.location.search;
+    window.location.replace(newURL);
+  }
+	
+</script>
+
+
+<!-- Begin device drop-down form -->
+<form id="device_selector" method="GET" action="">
+<fieldset>
+  <legend>Device:</legend>
+  <select name="device_name" id="device_list">
+    <option value="">All Devices</option>
+  </select>
+</fieldset>
+<input type=submit></form>
+<!-- End device drop-down form -->
+
+<!-- Load script with handy functions -->
+<script src="js/ajax-functions.js"></script>
+
+<!-- Populate device selector drop-down -->
+<script>
+
+  (async() => {
+ 
+    // Populate Drop-down with List of Commands
+    MakeAjaxCall("../python/panxml2json.cgi?command=list_devices").then(data => {
+      const selector = document.getElementById('device_list')
+      for (const obj of data) {
+        let option = document.createElement("option");
+        option.value = obj.hostname;
+        option.text = obj.hostname;
+        selector.add(option);
+        if (option.value == get_params["device_name"])
+          option.selected = true;
+      }
+    }).catch(console.log);
+
+  })();
+
+</script>
+
+<!-- Load Google Maps Functions -->
+<script src="js/map-functions.js"></script>
+
+<script>
+
+  // Initialize locations array
+  var locations = new Array();	 
+  locations[0] = { title: "My Location", lat: null, lng: null};
+
+</script>
+
+<!-- Initialize Map -->
+<div id='map'>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRxoCyNleUUujra18-Ii-BW2gAIhAkLr8&callback=initMap"></script>
+</div>
+
+<script>
+
+  function PlotGeoIP(session_data, geoip_data) {
+    if (geoip_data.country_code) {
+      let location_info = {};
+      location_info.title = session_data.username;
+      random_offset = Math.round(Math.random() * 10) / 2000;
+      random_offset *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+      location_info.lat = geoip_data.lat + random_offset;
+      location_info.lng = geoip_data.lng + random_offset;
+      location_info.details = `<b>${session_data.username}</b><br>`;
+      location_info.details += `Login: ${session_data.username}<br>`;
+      location_info.details += `Computer Name: ${session_data.computer}<br>`;
+      location_info.details += `Private IP: ${session_data.virtual_ip}<br>`;
+      location_info.details += `Public IP: ${session_data.public_ip}<br>`;
+
+      // Add GeoIP data
+      location_info.details += `ISP: ${geoip_data.isp_name}<br>`;
+      location_info.details += `Location: `;
+
+      // And City and State/Region 
+      if (geoip_data.city)
+        location_info.details += `${geoip_data.city}</abbr>`;
+      if (geoip_data.region_code)
+        location_info.details += `, <abbr title="${geoip_data.region_name}">${geoip_data.region_code}</abbr>`;
+      location_info.details += ` <abbr title="${geoip_data.country_name}">${geoip_data.country_code}</abbr><br>`;
+
+      // Plot Map Marker
+      PlotMarker(location_info);
+      map.fitBounds(bounds);
+    }
+  }
+
+
+  // Retreive Remote Access session data
+  (async() => {
+
+    let params = "command=show_global-protect-gateway_current-user"
+    if (get_params["device_name"])
+      params += "&device_name=" + get_params["device_name"];
+
+    MakeAjaxCall("../python/panxml2json.cgi?" + params).then(data => {
+
+      for (const session_data of data) {
+
+        MakeAjaxCall("https://python.j5.org/geoip/" + session_data.public_ip).then(geoip_data => {
+          PlotGeoIP(session_data, geoip_data);
+        }).catch(console.log)
+      }
+    }).catch(console.log)
+
+    // Re-zoom map boundary one final time
+    map.panToBounds(bounds);
+
+  })();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Output Frame</title>
+  <meta http-equiv="Cache-Control" content="no-cache"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0" />
+  <style>
+    table    { width: 100%; border-spacing: 2px; border-collapse: collapse; border: 1px solid black; }
+    th,td    { font-family: arial; text-align: left; border: 1px solid black; padding: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- Load script with handy functions -->
+<script src="js/ajax-functions.js"></script>
+
+<table id="results_table">
+<caption></caption>
+<thead></thead>
+<tbody></tbody>
+<tfoot></tfoot>
+</table>
+
+<!-- Load jQuery -->
+<script src="js/jquery.min.js"></script>
+
+<script>
+
+// Parse get parameters
+var get_params = {}
+location.search.substr(1).split("&").forEach(function(item) {get_params[item.split("=")[0]] = item.split("=")[1]})
+
+let device_name = get_params["device_name"]; 
+let command = get_params["command"]; 
+
+(async() => {
+
+  if (command) {
+
+    // Populate Drop-down with List of Commands
+    MakeAjaxCall("panxml2json.cgi?command=" + command).then(data => {
+
+      // Fill Table Header
+      $("#results_table thead").empty();
+      let table_head_html = "<tr>";
+      for (let key in data[0]) {
+        table_head_html += "<th>" + key + "</th>";
+      }
+      table_head_html += "</tr>";
+      $("#results_table thead").append(table_head_html);
+
+      // Fill Table Body
+      $("#results_table tbody").empty();
+      $.each(data, function(index, obj) {
+        let row_html = "<tr>";
+        for (let key in obj) {
+          row_html += "<td>" + obj[key] + "</td>";
+        }
+        row_html += "</tr>";
+        $("#results_table").append(row_html);
+      });
+
+      // Fill Table Footer
+      $("#results_table tfoot").empty();
+      let table_foot_html = "<tr>";
+      for (let key in data[0]) {
+        table_foot_html += "<td><b>" + key + "</b></td>";
+      }
+      table_foot_html += "</tr>";
+      $("#results_table tfoot").append(table_foot_html);
+
+      // Set alternating table row background colors
+      $(document).ready(function(){
+        $("table tr:even").css("background-color", "#fefefe");
+        $("table tr:odd").css("background-color", "#efefef");
+      });
+    });
+  }
+})();
+
+</script>
+</table>
+
+</body>
+</html>

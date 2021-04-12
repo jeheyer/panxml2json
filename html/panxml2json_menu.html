@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Top Menu Frame</title>
+  <meta http-equiv="Cache-Control" content="no-cache"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0" />
+  <style>
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+.wrapper{
+    margin: auto;
+    width: 100%;
+    max-width: 1000px;
+    padding:10px;
+    background-color: #ccc;
+}
+input {
+    width: 15%;
+}
+fieldset{
+    float: left;
+    width: 25%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+fieldset input{
+    width: 100%;
+}
+  </style>
+</head>
+<body>
+
+<!-- Begin Form -->
+<form method="get" action="panxml2json_output.html" target="output_iframe">
+<fieldset>
+  <legend>Device:</legend>
+  <select name="device_name" id="device_list" size=1>
+    <option value="" selected>All Devices</option>
+  </select>
+</fieldset>
+<fieldset>
+  <legend>Command:</legend>
+  <select name="command" id="commands_list" size=1>
+    <option value="">&nbsp;</option>
+  </select>
+</fieldset>
+<input type="submit" value="Show Rest Data">
+<input type="reset" value="Clear form">
+</form>
+<!-- End Form -->
+
+<script src="js/ajax-functions.js"></script>
+<script>
+  
+  (async() => {
+
+    // Populate Drop-down with List of Commands
+    MakeAjaxCall("../python/panxml2json.cgi?command=list_devices").then(data => {
+      const selector = document.getElementById('device_list')
+      for (const obj of data) {
+        let option = document.createElement("option");
+        option.value = obj.hostname;
+        option.text = obj.hostname;
+        selector.add(option);
+      }
+    }).catch(console.log);
+    
+    // Populate Drop-down with List of Commands
+    MakeAjaxCall("../python/panxml2json.cgi?command=list_commands").then(data => {
+      const selector = document.getElementById('commands_list')
+      for (const obj of data) {
+        let option = document.createElement("option");
+        for (const [key, value] of Object.entries(obj)) {
+          option.value = key;
+          option.text = value;
+          selector.add(option);
+        }
+      }
+    }).catch(console.log);
+
+  })();
+
+</script>
+
+</body>
+</html>
