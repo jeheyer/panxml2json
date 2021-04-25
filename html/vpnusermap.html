@@ -126,7 +126,8 @@
          }
       }).catch(console.log)
       for (const session of session_data) {
-           console.log(session);
+           console.log(geoip_hash);
+          
         PlotSession(session, geoip_hash[session.public_ip]);
       }
     }).catch(console.log)
