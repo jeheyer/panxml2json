@@ -76,27 +76,27 @@ function PlotSession(session, geoip) {
     console.log(session, geoip);
     if (geoip.country_code) {
       let location_info = {};
-      location_info.title = session_data.username;
+      location_info.title = session.username;
       random_offset = Math.round(Math.random() * 10) / 2000;
       random_offset *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-      location_info.lat = geoip_data.lat + random_offset;
-      location_info.lng = geoip_data.lng + random_offset;
-      location_info.details = `<b>${session_data.username}</b><br>`;
-      location_info.details += `Login: ${session_data.username}<br>`;
-      location_info.details += `Computer Name: ${session_data.computer}<br>`;
-      location_info.details += `Private IP: ${session_data.virtual_ip}<br>`;
-      location_info.details += `Public IP: ${session_data.public_ip}<br>`;
+      location_info.lat = geoip.lat + random_offset;
+      location_info.lng = geoip.lng + random_offset;
+      location_info.details = `<b>${session.username}</b><br>`;
+      location_info.details += `Login: ${session.username}<br>`;
+      location_info.details += `Computer Name: ${session.computer}<br>`;
+      location_info.details += `Private IP: ${session.virtual_ip}<br>`;
+      location_info.details += `Public IP: ${session.public_ip}<br>`;
 
       // Add GeoIP data
-      location_info.details += `ISP: ${geoip_data.isp_name}<br>`;
+      location_info.details += `ISP: ${geoip.isp_name}<br>`;
       location_info.details += `Location: `;
 
       // And City and State/Region 
       if (geoip_data.city)
-        location_info.details += `${geoip_data.city}</abbr>`;
+        location_info.details += `${geoip.city}</abbr>`;
       if (geoip_data.region_code)
-        location_info.details += `, <abbr title="${geoip_data.region_name}">${geoip_data.region_code}</abbr>`;
-      location_info.details += ` <abbr title="${geoip_data.country_name}">${geoip_data.country_code}</abbr><br>`;
+        location_info.details += `, <abbr title="${geoip.region_name}">${geoip.region_code}</abbr>`;
+      location_info.details += ` <abbr title="${geoip.country_name}">${geoip.country_code}</abbr><br>`;
 
       // Plot Map Marker
       PlotMarker(location_info);
