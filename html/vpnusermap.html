@@ -117,6 +117,7 @@
       let geoip_url = "https://python.j5.org/geoip";
       for (const session of session_data)
         geoip_url += "/" + session.public_ip;
+      console.log(geoip_url);
       MakeAjaxCall(geoip_url).then(geoip_data => {
         PlotGeoIP(session_data, geoip_data);
       }).catch(console.log)
