@@ -125,7 +125,7 @@ function PlotSession(session, geoip) {
                 geoip_table[geoip.ipv4_address] = geoip;
                 console.log(geoip.ipv4_address);
             }
-            console.log(geoip_hash);
+            console.log(geoip_table);
             for (const user_info of user_sessions) { 
                 geoip = geoip_table[user_info.public_ip];
                 PlotSession(user_info, geoip);
