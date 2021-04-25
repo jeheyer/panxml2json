@@ -75,6 +75,7 @@
 <script>
 
   function PlotSession(session, geoip) {
+    console.log(session, geoip);
     if (geoip.country_code) {
       let location_info = {};
       location_info.title = session_data.username;
