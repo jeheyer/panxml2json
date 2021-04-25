@@ -72,7 +72,7 @@ locations[0] = { title: "My Location", lat: null, lng: null};
 
 <script>
 
-  function PlotSession(session, geoip) {
+function PlotSession(session, geoip) {
     console.log(session, geoip);
     if (geoip.country_code) {
       let location_info = {};
@@ -102,33 +102,34 @@ locations[0] = { title: "My Location", lat: null, lng: null};
       PlotMarker(location_info);
       map.fitBounds(bounds);
     }
-  }
+}
 
 
-  // Retreive Remote Access session data
-  (async() => {
+// Retreive Remote Access session data
+(async() => {
 
     let params = "command=show_global-protect-gateway_current-user"
     if (get_params["device_name"])
-      params += "&device_name=" + get_params["device_name"];
+        params += "&device_name=" + get_params["device_name"];
 
     MakeAjaxCall("../python/panxml2json.cgi?" + params).then(session_data => {
-    console.log("Session data len:" + session_data.lenghth);
-    let geoip_url = "https://python.j5.org/geoip";
-      for (const session of session_data)
-        geoip_url += "/" + session.public_ip;
-      var geoip_hash = {};
-      MakeAjaxCall(geoip_url).then(geoip_data => {
-          console.log(geoip_data.length);
-         for (const geoip of geoip_data) {
-             //console.log(geoip);
-             geoip_hash[geoip.ipv4_address] = geoip;
-             //console.log(geoip.ipv4_address);
-         }
-          //console.log(geoip_hash);
-      }).catch(console.log)
-      console.log(geoip_hash);
-      for (const user_info of session_data) {
+        console.log("Session data len:" + session_data.lenghth);
+        let geoip_url = "https://python.j5.org/geoip";
+        for (const session of session_data) {            
+            geoip_url += "/" + session.public_ip;
+        }
+        var geoip_hash = {};
+        MakeAjaxCall(geoip_url).then(geoip_data => {
+            console.log(geoip_data.length);
+            for (const geoip of geoip_data) {
+                //console.log(geoip);
+                geoip_hash[geoip.ipv4_address] = geoip;
+                //console.log(geoip.ipv4_address);
+            }
+            //console.log(geoip_hash);
+        }).catch(console.log)
+        console.log(geoip_hash);
+        for (const user_info of session_data) {
            
           //console.log(session.public_ip);
           //public_ip = session.public_ip;
@@ -138,13 +139,13 @@ locations[0] = { title: "My Location", lat: null, lng: null};
           console.log(geoip_hash);
           console.log(geoip);
         //PlotSession(session, geoip_hash[session.public_ip]);
-      }
+        }
     }).catch(console.log)
 
     // Re-zoom map boundary one final time
     map.panToBounds(bounds);
 
-  })();
+})();
 
 </script>
 
