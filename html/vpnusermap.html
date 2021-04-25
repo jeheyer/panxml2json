@@ -126,12 +126,13 @@
              geoip_hash[geoip.ipv4_address] = geoip;
              console.log(geoip.ipv4_address);
          }
-          console.log(geoip_hash);
+          //console.log(geoip_hash);
       }).catch(console.log)
         console.log(geoip_hash);
       for (const session of session_data) {
            console.log(geoip_hash);
-          
+          console.log(session.public_ip);
+           console.log(geoip_hash[session.public_ip])
         PlotSession(session, geoip_hash[session.public_ip]);
       }
     }).catch(console.log)
