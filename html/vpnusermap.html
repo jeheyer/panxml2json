@@ -74,8 +74,8 @@
 
 <script>
 
-  function PlotGeoIP(session_data, geoip_data) {
-    if (geoip_data.country_code) {
+  function PlotSession(session, geoip) {
+    if (geoip.country_code) {
       let location_info = {};
       location_info.title = session_data.username;
       random_offset = Math.round(Math.random() * 10) / 2000;
@@ -120,8 +120,9 @@
       var geoip_hash = {};
       MakeAjaxCall(geoip_url).then(geoip_data => {
           console.log(geoip_data.length);
-         for (const geoip_obj of geoip_data) {
-             geoip_hash[geoip_obj.ipv4_address] = geoip_obj;
+         for (const geoip of geoip_data) {
+             console.log(geoip);
+             geoip_hash[geoip.ipv4_address] = geoip;
          }
       }).catch(console.log)
       for (const session of session_data)
