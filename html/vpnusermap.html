@@ -135,7 +135,8 @@
           public_ip = session.public_ip;
           console.log(public_ip);
           console.log(geoip_hash);
-        console.log(geoip_hash.public_ip)
+          geoip = geoip_hash.get(public_ip);
+        console.log(geo);
         //PlotSession(session, geoip_hash[session.public_ip]);
       }
     }).catch(console.log)
