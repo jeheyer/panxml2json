@@ -119,10 +119,10 @@
         geoip_url += "/" + session.public_ip;
       var geoip_hash = {};
       MakeAjaxCall(geoip_url).then(geoip_data => {
+          console.log(geoip_data.length);
          for (const geoip_obj of geoip_data) {
              geoip_hash[geoip_obj.ipv4_address] = geoip_obj;
          }
-          console.log(geoip_data.lenth);
       }).catch(console.log)
       for (const session of session_data)
         PlotGeoIP(session, geoip_hash[session.public_ip]);
