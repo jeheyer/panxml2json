@@ -126,7 +126,7 @@
          }
       }).catch(console.log)
       for (const session of session_data)
-        PlotGeoIP(session, geoip_hash[session.public_ip]);
+        PlotSession(session, geoip_hash[session.public_ip]);
     }).catch(console.log)
 
     // Re-zoom map boundary one final time
