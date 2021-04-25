@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Current VPN user map</title>
-  <meta http-equiv="Cache-Control" content="no-cache"/>
-  <meta http-equiv="Pragma" content="no-cache"/>
-  <meta http-equiv="Expires" content="0" />
-  <style> #map { height: 95%; } html,body { height: 100%; }</style>
+ <title>Current VPN user map</title>
+ <meta http-equiv="Cache-Control" content="no-cache"/>
+ <meta http-equiv="Pragma" content="no-cache"/>
+ <meta http-equiv="Expires" content="0" />
+ <style> #map { height: 95%; } html,body { height: 100%; }</style>
 </head>
 <body>
 <script>
 	
-  // Google maps API requires HTTPS refer
-  if (location.protocol !== 'https:' ) {
-    // Form HTTPS URL and redirect to it
-    let newURL = 'https://' + window.location.hostname + window.location.pathname + window.location.search;
-    window.location.replace(newURL);
-  }
+    // Google maps API requires HTTPS refer
+    if (location.protocol !== 'https:' ) {
+        // Form HTTPS URL and redirect to it
+        let newURL = 'https://' + window.location.hostname + window.location.pathname + window.location.search;
+        window.location.replace(newURL);
+    }
 	
 </script>
 
@@ -129,7 +129,7 @@
          }
           //console.log(geoip_hash);
       }).catch(console.log)
-        console.log(geoip_hash);
+      console.log(geoip_hash);
       for (const user_info of session_data) {
            
           //console.log(session.public_ip);
