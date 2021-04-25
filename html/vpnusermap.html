@@ -115,8 +115,8 @@ function PlotSession(session, geoip) {
     MakeAjaxCall("../python/panxml2json.cgi?" + params).then(user_sessions => {
         console.log("Session data len:" + user_sessions.length);
         let geoip_url = "https://python.j5.org/geoip";
-        for (const session of session_data) {            
-            geoip_url += "/" + session.public_ip;
+        for (const user_info of user_sessions) {            
+            geoip_url += "/" + user_info.public_ip;
         }
         var geoip_hash = {};
         MakeAjaxCall(geoip_url).then(geoip_data => {
@@ -130,7 +130,7 @@ function PlotSession(session, geoip) {
         }).catch(console.log)
         console.log("GeoIP data len:" + geoip_data.length);
         console.log(geoip_hash);
-        for (const user_info of session_data) {
+        for (const user_info of user_sessions) {
            
           //console.log(session.public_ip);
           //public_ip = session.public_ip;
