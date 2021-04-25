@@ -120,7 +120,7 @@ function PlotSession(session, geoip) {
         }
         var geoip_hash = {};
         MakeAjaxCall(geoip_url).then(geoip_data => {
-            console.log(geoip_data.length);
+            console.log("GeoIP data len:" + geoip_data.length);
             for (const geoip of geoip_data) {
                 //console.log(geoip);
                 geoip_hash[geoip.ipv4_address] = geoip;
@@ -128,7 +128,7 @@ function PlotSession(session, geoip) {
             }
             console.log(geoip_hash);
         }).catch(console.log)
-        console.log("GeoIP data len:" + geoip_data.length);
+        
         console.log(geoip_hash);
         var keys = Object.keys(geoip_hash);
         console.log(keys);
