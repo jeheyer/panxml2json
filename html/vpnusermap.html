@@ -121,9 +121,9 @@
       MakeAjaxCall(geoip_url).then(geoip_data => {
           console.log(geoip_data.length);
          for (const geoip of geoip_data) {
-             console.log(geoip);
+             //console.log(geoip);
              geoip_hash[geoip.ipv4_address] = geoip;
-             console.log(geoip);
+             console.log(geoip.ipv4_address);
          }
       }).catch(console.log)
       for (const session of session_data) {
