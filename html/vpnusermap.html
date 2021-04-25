@@ -117,11 +117,10 @@
       let geoip_url = "https://python.j5.org/geoip";
       for (const session of session_data)
         geoip_url += "/" + session.public_ip;
-      console.log(geoip_url);
+      var geoip_hash = {};
       MakeAjaxCall(geoip_url).then(geoip_data => {
-         var geoip_hash = {};
-         for (const geoip of geoip_data) {
-             geoip_hash[geoip.ipv4_address] = geoip;
+         for (const geoip_obj of geoip_data) {
+             geoip_hash[geoip_obj.ipv4_address] = geoip_obj;
          }
       }).catch(console.log)
       for (const session of session_data)
