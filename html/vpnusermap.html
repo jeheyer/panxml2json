@@ -92,9 +92,9 @@ function PlotSession(session, geoip) {
       location_info.details += `Location: `;
 
       // And City and State/Region 
-      if (geoip_data.city)
+      if (geoip.city)
         location_info.details += `${geoip.city}</abbr>`;
-      if (geoip_data.region_code)
+      if (geoip.region_code)
         location_info.details += `, <abbr title="${geoip.region_name}">${geoip.region_code}</abbr>`;
       location_info.details += ` <abbr title="${geoip.country_name}">${geoip.country_code}</abbr><br>`;
 
