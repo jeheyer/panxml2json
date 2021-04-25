@@ -112,8 +112,8 @@ function PlotSession(session, geoip) {
     if (get_params["device_name"])
         params += "&device_name=" + get_params["device_name"];
 
-    MakeAjaxCall("../python/panxml2json.cgi?" + params).then(session_data => {
-        console.log("Session data len:" + session_data.lenghth);
+    MakeAjaxCall("../python/panxml2json.cgi?" + params).then(user_sessions => {
+        console.log("Session data len:" + user_sessions.length);
         let geoip_url = "https://python.j5.org/geoip";
         for (const session of session_data) {            
             geoip_url += "/" + session.public_ip;
@@ -128,6 +128,7 @@ function PlotSession(session, geoip) {
             }
             //console.log(geoip_hash);
         }).catch(console.log)
+        console.log("GeoIP data len:" + geoip_data.length);
         console.log(geoip_hash);
         for (const user_info of session_data) {
            
