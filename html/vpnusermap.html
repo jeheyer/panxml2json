@@ -124,19 +124,19 @@
          for (const geoip of geoip_data) {
              //console.log(geoip);
              geoip_hash[geoip.ipv4_address] = geoip;
-             console.log(geoip.ipv4_address);
+             //console.log(geoip.ipv4_address);
          }
           //console.log(geoip_hash);
       }).catch(console.log)
         //console.log(geoip_hash);
       for (const session of session_data) {
            
-          console.log(session.public_ip);
-          public_ip = session.public_ip;
-          console.log(public_ip);
-          console.log(geoip_hash);
-          geoip = geoip_hash.get(public_ip);
-        console.log(geo);
+          //console.log(session.public_ip);
+          //public_ip = session.public_ip;
+          //console.log(public_ip);
+          //console.log(geoip_hash);
+          geoip = geoip_hash[session.public_ip];
+          console.log(geoip);
         //PlotSession(session, geoip_hash[session.public_ip]);
       }
     }).catch(console.log)
