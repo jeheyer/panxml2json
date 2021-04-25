@@ -119,10 +119,13 @@
         geoip_url += "/" + session.public_ip;
       console.log(geoip_url);
       MakeAjaxCall(geoip_url).then(geoip_data => {
-        for (const geoip of geoip_data) {
-            PlotGeoIP(session, geoip);
-        }
+         var geoip_hash = {};
+         for (const geoip of geoip_data) {
+             geoip_hash[geoip.ipv4_address] = geoip;
+         }
       }).catch(console.log)
+      for (const session of session_data)
+        PlotGeoIP(session, geoip);
     }).catch(console.log)
 
     // Re-zoom map boundary one final time
