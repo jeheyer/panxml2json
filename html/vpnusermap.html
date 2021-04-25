@@ -128,14 +128,15 @@
          }
           //console.log(geoip_hash);
       }).catch(console.log)
-        console.log(geoip_hash);
+        //console.log(geoip_hash);
       for (const session of session_data) {
-           console.log(geoip_hash);
+           
           console.log(session.public_ip);
           public_ip = session.public_ip;
           console.log(public_ip);
+          console.log(geoip_hash);
            console.log(geoip_hash["49.37.85.165"])
-        PlotSession(session, geoip_hash[session.public_ip]);
+        //PlotSession(session, geoip_hash[session.public_ip]);
       }
     }).catch(console.log)
 
