@@ -118,19 +118,20 @@ function PlotSession(session, geoip) {
         for (const user_info of user_sessions) {            
             geoip_url += "/" + user_info.public_ip;
         }
-        var geoip_hash = {};
+        var geoip_table = {};
         MakeAjaxCall(geoip_url).then(geoip_data => {
             console.log("GeoIP data len:" + geoip_data.length);
             for (const geoip of geoip_data) {
-                geoip_hash[geoip.ipv4_address] = geoip;
+                geoip_table[geoip.ipv4_address] = geoip;
                 console.log(geoip.ipv4_address);
             }
             console.log(geoip_hash);
+            for (const user_info of user_sessions) { 
+                geoip = geoip_table[user_info.public_ip];
+                PlotSession(user_info, geoip);
+            }
         }).catch(console.log)
         console.log(geoip_hash);
-        for (const user_info of user_sessions) {            
-            PlotSession(user_info, {'country_code': "US", 'city': "fal", 'country_name': "USA", 'lat': 0, 'lng': 0})
-        }
     }).catch(console.log)
         
     // Re-zoom map boundary one final time
