@@ -128,8 +128,10 @@ function PlotSession(session, geoip) {
             console.log(geoip_hash);
         }).catch(console.log)
         console.log(geoip_hash);
+        for (const user_info of user_sessions) {            
+            PlotSession(user_info, {'country_code': "US"})
+        }
     }).catch(console.log)
-    
         
     // Re-zoom map boundary one final time
     map.panToBounds(bounds);
