@@ -132,7 +132,8 @@
       for (const session of session_data) {
            console.log(geoip_hash);
           console.log(session.public_ip);
-           console.log(geoip_hash[session.public_ip])
+          public_ip = session.public_ip;
+           console.log(geoip_hash[public_ip])
         PlotSession(session, geoip_hash[session.public_ip]);
       }
     }).catch(console.log)
