@@ -119,7 +119,9 @@
         geoip_url += "/" + session.public_ip;
       console.log(geoip_url);
       MakeAjaxCall(geoip_url).then(geoip_data => {
-        PlotGeoIP(session_data, geoip_data);
+        for (const geoip of geoip_data) {
+            PlotGeoIP(session, geoip);
+        }
       }).catch(console.log)
     }).catch(console.log)
 
