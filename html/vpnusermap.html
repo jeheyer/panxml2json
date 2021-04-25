@@ -113,14 +113,13 @@
     if (get_params["device_name"])
       params += "&device_name=" + get_params["device_name"];
 
-    MakeAjaxCall("../python/panxml2json.cgi?" + params).then(data => {
-
-      for (const session_data of data) {
-
-        MakeAjaxCall("https://python.j5.org/geoip/" + session_data.public_ip).then(geoip_data => {
-          PlotGeoIP(session_data, geoip_data);
-        }).catch(console.log)
-      }
+    MakeAjaxCall("../python/panxml2json.cgi?" + params).then(session_data => {
+      let geoip_url = "https://python.j5.org/geoip";
+      for (const session of session_data)
+        geoip_url += "/" + session.public_ip;
+      MakeAjaxCall(geoip_url).then(geoip_data => {
+        PlotGeoIP(session_data, geoip_data);
+      }).catch(console.log)
     }).catch(console.log)
 
     // Re-zoom map boundary one final time
