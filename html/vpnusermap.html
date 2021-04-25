@@ -123,7 +123,7 @@ function PlotSession(session, geoip) {
             console.log("GeoIP data len:" + geoip_data.length);
             for (const geoip of geoip_data) {
                 geoip_hash[geoip.ipv4_address] = geoip;
-            //console.log(geoip.ipv4_address);
+                console.log(geoip.ipv4_address);
             }
             console.log(geoip_hash);
         }).catch(console.log)
