@@ -125,8 +125,10 @@
              geoip_hash[geoip.ipv4_address] = geoip;
          }
       }).catch(console.log)
-      for (const session of session_data)
+      for (const session of session_data) {
+           console.log(session);
         PlotSession(session, geoip_hash[session.public_ip]);
+      }
     }).catch(console.log)
 
     // Re-zoom map boundary one final time
