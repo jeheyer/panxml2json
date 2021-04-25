@@ -115,7 +115,8 @@
       params += "&device_name=" + get_params["device_name"];
 
     MakeAjaxCall("../python/panxml2json.cgi?" + params).then(session_data => {
-      let geoip_url = "https://python.j5.org/geoip";
+    console.log("Session data len:" + session_data.lenghth);
+    let geoip_url = "https://python.j5.org/geoip";
       for (const session of session_data)
         geoip_url += "/" + session.public_ip;
       var geoip_hash = {};
