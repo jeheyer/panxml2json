@@ -129,13 +129,13 @@
           //console.log(geoip_hash);
       }).catch(console.log)
         //console.log(geoip_hash);
-      for (const session of session_data) {
+      for (const user_info of session_data) {
            
           //console.log(session.public_ip);
           //public_ip = session.public_ip;
           //console.log(public_ip);
           //console.log(geoip_hash);
-          geoip = geoip_hash[session.public_ip];
+          geoip = geoip_hash[user_info.public_ip];
           console.log(geoip);
         //PlotSession(session, geoip_hash[session.public_ip]);
       }
