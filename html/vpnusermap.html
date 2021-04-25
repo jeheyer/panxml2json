@@ -130,6 +130,8 @@ function PlotSession(session, geoip) {
         }).catch(console.log)
         console.log("GeoIP data len:" + geoip_data.length);
         console.log(geoip_hash);
+        var keys = Object.keys(geoip_hash);
+        console.log(keys);
         for (const user_info of user_sessions) {
            
           //console.log(session.public_ip);
