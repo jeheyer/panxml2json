@@ -113,23 +113,22 @@ function PlotSession(session, geoip) {
         params += "&device_name=" + get_params["device_name"];
 
     MakeAjaxCall("../python/panxml2json.cgi?" + params).then(user_sessions => {
-        console.log("Session data len:" + user_sessions.length);
+        //console.log("Session data len:" + user_sessions.length);
         let geoip_url = "https://python.j5.org/geoip";
         for (const user_info of user_sessions) {            
             geoip_url += "/" + user_info.public_ip;
         }
+        var geoip_hash = {};
+        MakeAjaxCall(geoip_url).then(geoip_data => {
+            console.log("GeoIP data len:" + geoip_data.length);
+            for (const geoip of geoip_data) {
+                geoip_hash[geoip.ipv4_address] = geoip;
+            //console.log(geoip.ipv4_address);
+            }
+            console.log(geoip_hash);
+        }).catch(console.log)
     }).catch(console.log)
     
-    var geoip_hash = {};
-    MakeAjaxCall(geoip_url).then(geoip_data => {
-        console.log("GeoIP data len:" + geoip_data.length);
-        for (const geoip of geoip_data) {
-            //console.log(geoip);
-            geoip_hash[geoip.ipv4_address] = geoip;
-        //console.log(geoip.ipv4_address);
-        }
-        console.log(geoip_hash);
-    }).catch(console.log)
         
     // Re-zoom map boundary one final time
     map.panToBounds(bounds);
