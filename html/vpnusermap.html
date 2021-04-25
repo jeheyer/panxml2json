@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <title>Current VPN user map</title>
- <meta http-equiv="Cache-Control" content="no-cache"/>
- <meta http-equiv="Pragma" content="no-cache"/>
- <meta http-equiv="Expires" content="0" />
- <style> #map { height: 95%; } html,body { height: 100%; }</style>
+    <title>Current VPN user map</title>
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0" />
+    <style> #map { height: 95%; } html,body { height: 100%; }</style>
 </head>
 <body>
 <script>
 	
-    // Google maps API requires HTTPS refer
-    if (location.protocol !== 'https:' ) {
-        // Form HTTPS URL and redirect to it
-        let newURL = 'https://' + window.location.hostname + window.location.pathname + window.location.search;
-        window.location.replace(newURL);
-    }
+// Google maps API requires HTTPS refer
+if (location.protocol !== 'https:' ) {
+    // Form HTTPS URL and redirect to it
+    let newURL = 'https://' + window.location.hostname + window.location.pathname + window.location.search;
+    window.location.replace(newURL);
+}
 	
 </script>
 
@@ -23,10 +23,10 @@
 <!-- Begin device drop-down form -->
 <form id="device_selector" method="GET" action="">
 <fieldset>
-  <legend>Device:</legend>
-  <select name="device_name" id="device_list">
-    <option value="">All Devices</option>
-  </select>
+    <legend>Device:</legend>
+    <select name="device_name" id="device_list">
+        <option value="">All Devices</option>
+    </select>
 </fieldset>
 <input type=submit></form>
 <!-- End device drop-down form -->
@@ -37,22 +37,20 @@
 <!-- Populate device selector drop-down -->
 <script>
 
-  (async() => {
- 
+(async() => {
     // Populate Drop-down with List of Commands
     MakeAjaxCall("../python/panxml2json.cgi?command=list_devices").then(data => {
-      const selector = document.getElementById('device_list')
-      for (const obj of data) {
-        let option = document.createElement("option");
-        option.value = obj.hostname;
-        option.text = obj.hostname;
-        selector.add(option);
-        if (option.value == get_params["device_name"])
-          option.selected = true;
-      }
+        const selector = document.getElementById('device_list')
+        for (const obj of data) {
+            let option = document.createElement("option");
+            option.value = obj.hostname;
+            option.text = obj.hostname;
+            selector.add(option);
+            if (option.value == get_params["device_name"])
+                option.selected = true;
+        }
     }).catch(console.log);
-
-  })();
+})();
 
 </script>
 
@@ -61,9 +59,9 @@
 
 <script>
 
-  // Initialize locations array
-  var locations = new Array();	 
-  locations[0] = { title: "My Location", lat: null, lng: null};
+// Initialize locations array
+var locations = new Array();	 
+locations[0] = { title: "My Location", lat: null, lng: null};
 
 </script>
 
