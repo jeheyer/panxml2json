@@ -73,7 +73,7 @@ locations[0] = { title: "My Location", lat: null, lng: null};
 <script>
 
 function PlotSession(session, geoip) {
-    console.log(session, geoip);
+    //console.log(session, geoip);
     if (geoip.country_code) {
       let location_info = {};
       location_info.title = session.username;
@@ -120,10 +120,10 @@ function PlotSession(session, geoip) {
         }
         var geoip_table = {};
         MakeAjaxCall(geoip_url).then(geoip_data => {
-            console.log("GeoIP data len:" + geoip_data.length);
+            //console.log("GeoIP data len:" + geoip_data.length);
             for (const geoip of geoip_data) {
                 geoip_table[geoip.ipv4_address] = geoip;
-                console.log(geoip.ipv4_address);
+                //console.log(geoip.ipv4_address);
             }
             console.log(geoip_table);
             for (const user_info of user_sessions) { 
@@ -131,7 +131,7 @@ function PlotSession(session, geoip) {
                 PlotSession(user_info, geoip);
             }
         }).catch(console.log)
-        console.log(geoip_table);
+        //console.log(geoip_table);
     }).catch(console.log)
         
     // Re-zoom map boundary one final time
