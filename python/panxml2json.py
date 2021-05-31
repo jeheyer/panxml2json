@@ -37,7 +37,11 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
     api_command = f"{panxapi_location} -h {hostname} -K \"{api_key}\" -x -o \"{xml_command}\""
 
     try:
-        output = subprocess.check_output(api_command, shell=True)
+        error = None
+        #output = subprocess.check_output(api_command, shell=True)
+        output, error = subprocess.Popen(api_command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        if error:
+            raise(error)
     except subprocess.CalledProcessError as e:
         raise(e.output)
 
