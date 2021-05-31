@@ -2,8 +2,8 @@
 device_list_file = "/mnt/web/private/cfg/paloaltos.csv"
 
 # Location of panxapi.py 
-panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
-#panxapi_location = "./panxapi.py"
+#panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
+panxapi_location = "/mnt/homes/j5/www/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
 
 # Temporary XML file location
 temp_xml_file = "/tmp/xmlapioutput.xml"
@@ -38,19 +38,22 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
 
     api_command = f"{panxapi_location} -h {hostname} -K \"{api_key}\" -x -o \"{xml_command}\""
 
-    #try:
-    #output = ""
     #output = check_output(api_command, shell=True)
     #code, output = getstatusoutput(api_command)
     #raise(output)
     try:
-        process = Popen(api_command, stdout=PIPE, stderr=None, shell=True)
-        output, error = process.communicate()
-    except subprocess.CalledProcessError as e:
-        raise(e.output)
+        process = Popen(api_command, stdout=PIPE, stderr=PIPE, shell=True)
+        stdout = process.stdout.read()
+        stderr = process.stderr.read()
+    except Exception as e:
+        raise Exception("Subprocess command failed:", stderr.decode("utf-8"))
 
     # Write to temp file
-    lines = output.decode("utf-8").splitlines()
+    if stdout:
+        lines = stdout.decode("utf-8").splitlines()
+    else:
+        raise Exception("Subprocess command failed:", stderr.decode("utf-8"))
+
     #lines = output.splitlines()
     fh = open(temp_xml_file, "w")
     try:
