@@ -10,9 +10,9 @@ def application(environ, start_response):
     response_headers = [('Cache-Control', 'no-cache')]
 
     try:
-        request_uri = env_vars.get('REQUEST_URI', None)
+        request_uri = environ.get('REQUEST_URI', None)
         if not request_uri:
-            request_uri = env_vars.get('RAW_URI', self.path)
+            request_uri = environ.get('RAW_URI', self.path)
         query_string = dict(parse.parse_qsl(parse.urlsplit(str(request_uri)).query))
 
         json_data = json.dumps(GetData(query_string), indent=2)
