@@ -40,7 +40,7 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
     try:
         error = None
         #output = subprocess.check_output(api_command, shell=True)
-        output, error = subprocess.Popen(api_command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        output, error = Popen(api_command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         if error:
             raise(error)
     except subprocess.CalledProcessError as e:
