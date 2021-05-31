@@ -3,6 +3,7 @@ device_list_file = "/mnt/web/private/cfg/paloaltos.csv"
 
 # Location of panxapi.py 
 panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
+#panxapi_location = "./panxapi.py"
 
 # Temporary XML file location
 temp_xml_file = "/tmp/xmlapioutput.xml"
@@ -26,7 +27,7 @@ def ReadDevices():
 def MakeXMLAPICall(hostname, api_key, cli_command):
 
     import os
-    from subprocess import Popen, PIPE
+    from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
 
     xml_command = ""
     words = cli_command.split(" ")
@@ -37,17 +38,20 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
 
     api_command = f"{panxapi_location} -h {hostname} -K \"{api_key}\" -x -o \"{xml_command}\""
 
+    #try:
+    #output = ""
+    #output = check_output(api_command, shell=True)
+    #code, output = getstatusoutput(api_command)
+    #raise(output)
     try:
-        error = None
-        #output = subprocess.check_output(api_command, shell=True)
-        output, error = Popen(api_command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        if error:
-            raise(error)
-    #except subprocess.CalledProcessError as e:
-    #    raise(e.output)
+        process = Popen(api_command, stdout=PIPE, stderr=None, shell=True)
+        output, error = process.communicate()
+    except subprocess.CalledProcessError as e:
+        raise(e.output)
 
     # Write to temp file
     lines = output.decode("utf-8").splitlines()
+    #lines = output.splitlines()
     fh = open(temp_xml_file, "w")
     try:
         for line in lines:
@@ -84,7 +88,7 @@ def ReadXMLFile():
             entries.append(entry)
 
     # Cleanup Temp XML file
-    os.remove(temp_xml_file)
+    #os.remove(temp_xml_file)
 
     return entries
 
