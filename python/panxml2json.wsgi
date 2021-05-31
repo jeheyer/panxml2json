@@ -5,16 +5,15 @@ from panxml2json import *
 def application(environ, start_response):
 
     import json, traceback
-
-    query_string = {}
+    from urllib import parse
 
     response_headers = [('Cache-Control', 'no-cache')]
 
     try:
-        if '?' in environ['REQUEST_URI']:
-            for _ in environ.get('QUERY_STRING', None).split('&'):
-                [key, value] = _.split('=')
-                query_string[key] = value
+        request_uri = env_vars.get('REQUEST_URI', None)
+        if not request_uri:
+            request_uri = env_vars.get('RAW_URI', self.path)
+        query_string = dict(parse.parse_qsl(parse.urlsplit(str(request_uri)).query))
 
         json_data = json.dumps(GetData(query_string), indent=2)
 
@@ -31,4 +30,3 @@ def application(environ, start_response):
         # Return error message via traceback
         error = traceback.format_exc()
         return [ str(error).encode('utf-8') ]
-

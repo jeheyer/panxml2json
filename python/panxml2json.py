@@ -95,6 +95,11 @@ def GetData(params):
        'show_global-protect-gateway_current-user': "GlobalProtect Sessions",
        'show_vpn_tunnel': "Configured VPN Tunnels",
        'show_admins': "Admin Sessions",
+       'show_routing_protocol_bgp_peer': "BGP Peers",
+       'show_routing_protocol_bgp_peer-group': "Configured BGP Peer-Groups",
+       'show_routing_protocol_bgp_loc-rib': "BGP Local Rib",
+       'show_routing_protocol_bgp_rib-out': "BGP Rib Out",
+       'show_routing_protocol_bgp_rib-out-detail': "BGP Rib Out Detailed",
     }
 
     data = []
