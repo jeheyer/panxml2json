@@ -58,7 +58,7 @@ fieldset input{
   (async() => {
 
     // Populate Drop-down with List of Commands
-    MakeAjaxCall("../python/panxml2json.cgi?command=list_devices").then(data => {
+    MakeAjaxCall("../python/panxml2json.wsgi?command=list_devices").then(data => {
       const selector = document.getElementById('device_list')
       for (const obj of data) {
         let option = document.createElement("option");
@@ -69,7 +69,7 @@ fieldset input{
     }).catch(console.log);
     
     // Populate Drop-down with List of Commands
-    MakeAjaxCall("../python/panxml2json.cgi?command=list_commands").then(data => {
+    MakeAjaxCall("../python/panxml2json.wsgi?command=list_commands").then(data => {
       const selector = document.getElementById('commands_list')
       for (const obj of data) {
         let option = document.createElement("option");

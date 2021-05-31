@@ -36,7 +36,7 @@
       params += "&device_name=" + get_params["device_name"];
 
     // Populate Drop-down with List of Commands
-    MakeAjaxCall("../python/panxml2json.cgi?" + params).then(data => {
+    MakeAjaxCall("../python/panxml2json.wsgi?" + params).then(data => {
 
       console.log(`Ajax call returned ${data.length} rows of data`);
 
