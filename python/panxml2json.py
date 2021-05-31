@@ -25,7 +25,8 @@ def ReadDevices():
 
 def MakeXMLAPICall(hostname, api_key, cli_command):
 
-    import subprocess, os
+    import os
+    from subprocess import Popen, PIPE
 
     xml_command = ""
     words = cli_command.split(" ")
