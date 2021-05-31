@@ -43,8 +43,8 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
         output, error = Popen(api_command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         if error:
             raise(error)
-    except subprocess.CalledProcessError as e:
-        raise(e.output)
+    #except subprocess.CalledProcessError as e:
+    #    raise(e.output)
 
     # Write to temp file
     lines = output.decode("utf-8").splitlines()
