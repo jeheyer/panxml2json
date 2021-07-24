@@ -1,4 +1,4 @@
-// Parse get parameters
+// Load this automatically - parse get parameters to object called 'get_params'
 var get_params = {}
 location.search.substr(1).split("&").forEach(function(item) {
   get_params[item.split("=")[0]] = item.split("=")[1];
@@ -19,7 +19,7 @@ const MakeAjaxCall = async (url, options) => {
 
   } else {
 
-    return Promise.reject('Ajax call failed:', ajax_request);
+    return Promise.reject('Ajax call failed:' + ajax_request);
 
   }
 }
