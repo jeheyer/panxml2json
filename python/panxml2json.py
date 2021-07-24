@@ -4,7 +4,7 @@ device_list_file = "/web/private/cfg/paloaltos.csv"
 # Location of panxapi.py 
 #panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
 #panxapi_location = "/mnt/homes/j5/www/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
-panxapi_location = "/web/www/pan-python-0.16.0/bin/panxapi.py"
+panxapi_location = "/web/www/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
 
 # Temporary XML file location
 temp_xml_file = "/tmp/xmlapioutput.xml"
