@@ -1,5 +1,5 @@
 # Location of CSR file listing devices
-device_list_file = "../../../private/cfg/paloaltos.csv"
+device_list_file = "/home/jheyer/private/cfg/paloaltos.csv"
 
 # Location of panxapi.py 
 panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
