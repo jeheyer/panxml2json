@@ -30,3 +30,5 @@ def application(environ, start_response):
         # Return error message via traceback
         error = traceback.format_exc()
         return [ str(error).encode('utf-8') ]
+ 
+
