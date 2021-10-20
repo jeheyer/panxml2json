@@ -2,7 +2,7 @@
 device_list_file = "/home/jheyer/private/cfg/paloaltos.csv"
 
 # Location of panxapi.py 
-panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
+panxapi_location = "/home/jheyer/public_html/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
 #panxapi_location = "/mnt/homes/j5/www/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
 #panxapi_location = "/web/www/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
 
