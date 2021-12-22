@@ -8,6 +8,8 @@
   <style>
     table    { width: 100%; border-spacing: 2px; border-collapse: collapse; border: 1px solid black; }
     th,td    { font-family: arial; text-align: left; border: 1px solid black; padding: 4px; }
+    tr.even td { background-color: #f8f8f8; }
+    tr.odd td { background-color: #dfdfdf; }
   </style>
 </head>
 <body>
@@ -15,67 +17,59 @@
 <!-- Load script with handy functions -->
 <script src="js/ajax-functions.js"></script>
 
-<table id="results_table">
-<caption></caption>
-<thead></thead>
-<tbody></tbody>
-<tfoot></tfoot>
-</table>
-
-<!-- Load jQuery -->
-<script src="js/jquery.min.js"></script>
+<div id="results_table"></div>
 
 <script>
 
 (async() => {
 
-  if (get_params["command"]) {
+    const locale = navigator.language;
 
-    let params = "command=" + get_params["command"];
-    if (get_params["device_name"])
-      params += "&device_name=" + get_params["device_name"];
+    if (get_params["command"]) {
 
-    // Populate Drop-down with List of Commands
-    MakeAjaxCall("../python/panxml2json.wsgi?" + params).then(data => {
+        let params = "command=" + get_params["command"];
+        if (get_params["device_name"])
+            params += "&device_name=" + get_params["device_name"];
 
-      console.log(`Ajax call returned ${data.length} rows of data`);
+        // Populate Drop-down with List of Commands
+        MakeAjaxCall("../python/panxml2json.wsgi?" + params).then(data => {
 
-      // Fill Table Header
-      $("#results_table thead").empty();
-      let table_head_html = "<tr>";
-      for (let key in data[0]) {
-        table_head_html += "<th>" + key + "</th>";
-      }
-      table_head_html += "</tr>";
-      $("#results_table thead").append(table_head_html);
+            console.log(`Ajax call returned ${data.length} rows of data`);
 
-      // Fill Table Body
-      $("#results_table tbody").empty();
-      $.each(data, function(index, obj) {
-        let row_html = "<tr>";
-        for (let key in obj) {
-          row_html += "<td>" + obj[key] + "</td>";
-        }
-        row_html += "</tr>";
-        $("#results_table").append(row_html);
-      });
+            // Build a list of colums
+            let columns = [];
+            for (const key in data[0]) {
+                if (columns.indexOf(key) === -1) {
+                    columns.push(key);
+                }
+            }
 
-      // Fill Table Footer
-      $("#results_table tfoot").empty();
-      let table_foot_html = "<tr>";
-      for (let key in data[0]) {
-        table_foot_html += "<td><b>" + key + "</b></td>";
-      }
-      table_foot_html += "</tr>";
-      $("#results_table tfoot").append(table_foot_html);
+            // Create the table and fill the headers
+            let table = document.createElement("table");
+            let tr = table.insertRow(-1); 
+            for (let i = 0; i < columns.length; i++) {
+                let th = document.createElement("th");
+                th.innerHTML = columns[i];
+                tr.appendChild(th);
+            }
 
-      // Set alternating table row background colors
-      $(document).ready(function(){
-        $("table tr:even").css("background-color", "#fefefe");
-        $("table tr:odd").css("background-color", "#efefef");
-      });
-    });
-  }
+            // Fill the rows
+            for (let i = 0; i < data.length; i++) {
+                tr = table.insertRow(-1);
+                for (let j = 0; j < columns.length; j++) {
+                    let tabCell = tr.insertCell(-1);
+                    tabCell.innerHTML = data[i][columns[j]];
+                }
+                tr.className = (i % 2  == 0) ? "even" : "odd";
+            }
+
+            // Inject the rows to the table
+            var divContainer = document.getElementById("results_table");
+            divContainer.innerHTML = "";
+            divContainer.appendChild(table);
+        });
+    }
+
 })();
 
 </script>
