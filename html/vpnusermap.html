@@ -114,7 +114,7 @@ function PlotSession(session, geoip) {
 
     MakeAjaxCall("../python/panxml2json.cgi?" + params).then(user_sessions => {
         //console.log("Session data len:" + user_sessions.length);
-        let geoip_url = "https://whamola.net/geoip";
+        let geoip_url = "https://us-west1.gcp.whamola.net/wsgi/geoip";
         for (const user_info of user_sessions) {            
             geoip_url += "/" + user_info.public_ip;
         }
