@@ -1,7 +1,6 @@
+from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
 from os import path, remove
-
-# Location of panxapi.py 
-panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
+import xml.etree.ElementTree
 
 # Temporary XML file location
 temp_xml_file = "/tmp/xmlapioutput.xml"
@@ -30,7 +29,9 @@ def ReadDevices():
 
 def MakeXMLAPICall(hostname, api_key, cli_command):
 
-    from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
+    # Location of panxapi.py 
+    panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
+
 
     xml_command = ""
     words = cli_command.split(" ")
@@ -69,8 +70,6 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
         fh.close()
 
 def ReadXMLFile():
-
-    import xml.etree.ElementTree
 
     entries = []
     _ = xml.etree.ElementTree.iterparse(temp_xml_file, events=('end', ))
