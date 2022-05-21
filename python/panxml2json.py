@@ -1,8 +1,5 @@
 from os import path
 
-# Location of CSR file listing devices
-device_list_file = "../../../private/cfg/paloaltos.csv"
-
 # Location of panxapi.py 
 panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
 
@@ -10,6 +7,9 @@ panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
 temp_xml_file = "/tmp/xmlapioutput.xml"
 
 def ReadDevices():
+
+    # Location of CSV file listing devices
+    device_list_file = "../../../private/cfg/paloaltos.csv"
 
     devices = []
 
