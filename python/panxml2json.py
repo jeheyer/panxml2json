@@ -1,4 +1,4 @@
-from os import path
+from os import path, remove
 
 # Location of panxapi.py 
 panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
