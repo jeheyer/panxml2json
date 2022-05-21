@@ -1,10 +1,10 @@
+import os
+
 # Location of CSR file listing devices
-device_list_file = "/home/jheyer/private/cfg/paloaltos.csv"
+device_list_file = "../../../private/cfg/paloaltos.csv"
 
 # Location of panxapi.py 
-panxapi_location = "/home/jheyer/public_html/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
-#panxapi_location = "/mnt/homes/j5/www/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
-#panxapi_location = "/web/www/panxml2json/python/pan-python-0.16.0/bin/panxapi.py"
+panxapi_location = "pan-python-0.16.0/bin/panxapi.py"
 
 # Temporary XML file location
 temp_xml_file = "/tmp/xmlapioutput.xml"
@@ -12,6 +12,9 @@ temp_xml_file = "/tmp/xmlapioutput.xml"
 def ReadDevices():
 
     devices = []
+
+    PWD = os.path.realpath(path.dirname(__file__))
+    device_list_file = path.join(PWD, device_list_file)
 
     fh = open(device_list_file, "r")
     while fh:
@@ -27,7 +30,6 @@ def ReadDevices():
 
 def MakeXMLAPICall(hostname, api_key, cli_command):
 
-    import os
     from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
 
     xml_command = ""
@@ -36,6 +38,9 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
         xml_command += "<"+ words[i] +">"
     for i in range(len(words)-1, -1,-1):
         xml_command += "</"+ words[i] +">"
+
+    PWD = os.path.realpath(path.dirname(__file__))
+    panxapi_location = path.join(PWD, panxapi_location)
 
     api_command = f"{panxapi_location} -h {hostname} -K \"{api_key}\" -x -o \"{xml_command}\""
 
@@ -66,7 +71,6 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
 def ReadXMLFile():
 
     import xml.etree.ElementTree
-    import os
 
     entries = []
     _ = xml.etree.ElementTree.iterparse(temp_xml_file, events=('end', ))
