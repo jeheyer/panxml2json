@@ -41,7 +41,7 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
     PWD = path.realpath(path.dirname(__file__))
     panxapi_location = path.join(PWD, panxapi_location)
 
-    api_command = "{} -h {} -K \"{}\" -x -o \"{}\"".format(panxapi_location, hostname, api_key, xml_command))
+    api_command = "{} -h {} -K \"{}\" -x -o \"{}\"".format(panxapi_location, hostname, api_key, xml_command)
 
     try:
         process = Popen(api_command, stdout=PIPE, stderr=PIPE, shell=True)
