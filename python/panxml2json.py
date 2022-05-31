@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
 from os import path, remove
 import xml.etree.ElementTree
@@ -5,10 +7,7 @@ import xml.etree.ElementTree
 # Temporary XML file location
 temp_xml_file = "/tmp/xmlapioutput.xml"
 
-def ReadDevices():
-
-    # Location of CSV file listing devices
-    device_list_file = "../../../private/cfg/paloaltos.csv"
+def ReadDevices(device_list_file = "../cfg/paloaltos.csv"):
 
     devices = []
 
@@ -32,7 +31,6 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
     # Location of panxapi.py 
     panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
 
-
     xml_command = ""
     words = cli_command.split(" ")
     for i in range(len(words)):
@@ -43,11 +41,8 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
     PWD = path.realpath(path.dirname(__file__))
     panxapi_location = path.join(PWD, panxapi_location)
 
-    api_command = f"{panxapi_location} -h {hostname} -K \"{api_key}\" -x -o \"{xml_command}\""
+    api_command = "{} -h {} -K \"{}\" -x -o \"{}\"".format(panxapi_location, hostname, api_key, xml_command))
 
-    #output = check_output(api_command, shell=True)
-    #code, output = getstatusoutput(api_command)
-    #raise(output)
     try:
         process = Popen(api_command, stdout=PIPE, stderr=PIPE, shell=True)
         stdout = process.stdout.read()
@@ -144,5 +139,3 @@ def GetData(params):
          data.extend(ReadXMLFile())
 
     return data
- 
-
