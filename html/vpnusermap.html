@@ -39,7 +39,7 @@ if (location.protocol !== 'https:' ) {
 
 (async() => {
     // Populate Drop-down with List of Commands
-    MakeAjaxCall("../python/panxml2json.cgi?command=list_devices").then(data => {
+    MakeAjaxCall("../python/panxml2json.wsgi?command=list_devices").then(data => {
         const selector = document.getElementById('device_list')
         for (const obj of data) {
             let option = document.createElement("option");
@@ -112,7 +112,7 @@ function PlotSession(session, geoip) {
     if (get_params["device_name"])
         params += "&device_name=" + get_params["device_name"];
 
-    MakeAjaxCall("../python/panxml2json.cgi?" + params).then(user_sessions => {
+    MakeAjaxCall("../python/panxml2json.wsgi?" + params).then(user_sessions => {
         //console.log("Session data len:" + user_sessions.length);
         let geoip_url = "https://us-west1.gcp.whamola.net/wsgi/geoip";
         for (const user_info of user_sessions) {            
