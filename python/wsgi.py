@@ -7,7 +7,7 @@ def application(environ, start_response):
     import json, traceback
     from urllib import parse
 
-    reponse_code = "200 OK"
+    response_code = "200 OK"
     response_headers = [('Cache-Control', 'no-cache')]
 
     try:
