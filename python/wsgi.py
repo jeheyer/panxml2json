@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from panxml2json import *
 
 def application(environ, start_response):
@@ -5,6 +7,7 @@ def application(environ, start_response):
     import json, traceback
     from urllib import parse
 
+    reponse_code = "200 OK"
     response_headers = [('Cache-Control', 'no-cache')]
 
     try:
@@ -13,16 +16,16 @@ def application(environ, start_response):
             request_uri = environ.get('RAW_URI', '/')
         query_string = dict(parse.parse_qsl(parse.urlsplit(str(request_uri)).query))
 
-        json_data = json.dumps(GetData(query_string), indent=2)
-
+        output = json.dumps(GetData(query_string), indent=2)
         response_headers.append(('Content-type', 'application/json; charset=UTF-8'))
-        response_headers.append(('Content-Length', str(len(json_data))))
-        start_response('200 OK', response_headers)
-        return [ json_data.encode('utf-8') ]
+        response_headers.append(('Content-Length', str(len(output))))
 
     except:
 
+        response_code = "500 Internal Server Error"
         response_headers.append(('Content-type', 'text/plain'))
-        start_response('500 Internal Server Error', response_headers)
-        return [ str(traceback.format_exc()).encode('utf-8') ]
+        output = str(traceback.format_exc())    
+
+    start_response(response_code, response_headers)
+    return [ output.encode('utf-8') ]
 
