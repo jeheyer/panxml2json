@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#from panxml2json import *
+from panxml2json import *
 
 def application(environ, start_response):
 
