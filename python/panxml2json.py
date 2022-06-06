@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
-from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
-from os import path, remove
-import xml.etree.ElementTree
+TEMP_XML_FILE = "/tmp/xmlapioutput.xml"
+DEVICE_LIST_FILE = "./devicelist.csv"
 
-# Temporary XML file location
-temp_xml_file = "/tmp/xmlapioutput.xml"
+def ReadDevices(device_list_file = DEVICE_LIST_FILE):
 
-def ReadDevices(device_list_file = "../cfg/paloaltos.csv"):
+    from os import path
 
     devices = []
 
@@ -27,6 +25,9 @@ def ReadDevices(device_list_file = "../cfg/paloaltos.csv"):
     return devices
 
 def MakeXMLAPICall(hostname, api_key, cli_command):
+
+    from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
+    from os import path
 
     # Location of panxapi.py 
     panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
@@ -57,7 +58,7 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
         raise Exception("Subprocess command failed:", stderr.decode("utf-8"))
 
     #lines = output.splitlines()
-    fh = open(temp_xml_file, "w")
+    fh = open(TEMP_XML_FILE, "w")
     try:
         for line in lines:
             fh.write(line + "\n")
@@ -65,6 +66,9 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
         fh.close()
 
 def ReadXMLFile():
+
+    import xml.etree.ElementTree
+    from os import remove
 
     entries = []
     _ = xml.etree.ElementTree.iterparse(temp_xml_file, events=('end', ))

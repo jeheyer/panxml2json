@@ -23,6 +23,7 @@
 
 (async() => {
 
+    let wsgi_script = "/panxml2json.wsgi";
     const locale = navigator.language;
 
     if (get_params["command"]) {
@@ -32,7 +33,7 @@
             params += "&device_name=" + get_params["device_name"];
 
         // Populate Drop-down with List of Commands
-        MakeAjaxCall("../python/panxml2json.wsgi?" + params).then(data => {
+        MakeAjaxCall(wsgi_script + "?" + params).then(data => {
 
             console.log(`Ajax call returned ${data.length} rows of data`);
 
