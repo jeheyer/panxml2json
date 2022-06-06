@@ -71,7 +71,7 @@ def ReadXMLFile():
     from os import remove
 
     entries = []
-    _ = xml.etree.ElementTree.iterparse(temp_xml_file, events=('end', ))
+    _ = xml.etree.ElementTree.iterparse(TEMP_XML_FILE, events=('end', ))
 
     for event, elem in _:
         if elem.tag == 'entry':
@@ -94,7 +94,7 @@ def ReadXMLFile():
             entries.append(entry)
 
     # Cleanup Temp XML file
-    #os.remove(temp_xml_file)
+    os.remove(TEMP_XML_FILE)
 
     return entries
 
