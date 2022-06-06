@@ -17,7 +17,7 @@ def application(environ, start_response):
         query_string = dict(parse.parse_qsl(parse.urlsplit(str(request_uri)).query))
 
         #output = json.dumps(GetData(query_string), indent=2)
-        output = {'foo': "bar"}
+        output = "fuck"
         response_headers.append(('Content-type', 'application/json; charset=UTF-8'))
         response_headers.append(('Content-Length', str(len(output))))
 
