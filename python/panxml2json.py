@@ -94,7 +94,7 @@ def ReadXMLFile():
             entries.append(entry)
 
     # Cleanup Temp XML file
-    os.remove(TEMP_XML_FILE)
+    remove(TEMP_XML_FILE)
 
     return entries
 
