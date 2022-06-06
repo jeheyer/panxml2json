@@ -98,7 +98,7 @@ def ReadXMLFile():
 
     return entries
 
-def GetData(params):
+def GetData(params = {}):
 
     command = params.get('command', 'show_admins')
     device_name = params.get('device_name', '')
