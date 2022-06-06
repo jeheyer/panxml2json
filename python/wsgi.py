@@ -9,7 +9,7 @@ def application(environ, start_response):
 
     response_code = "200 OK"
     response_headers = [('Cache-Control', 'no-cache')]
-    output = {}
+    output = "fuck"
     start_response(response_code, response_headers)
     return [ output.encode('utf-8') ]
 
