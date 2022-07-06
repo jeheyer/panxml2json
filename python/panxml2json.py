@@ -30,7 +30,7 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
     from os import path
 
     # Location of panxapi.py 
-    panxapi_location = "./pan-python-0.16.0/bin/panxapi.py"
+    panxapi_location = "pan-python-0.16.0/bin/panxapi.py"
 
     xml_command = ""
     words = cli_command.split(" ")
