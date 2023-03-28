@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 
-from flask import Flask, request, jsonify, redirect, Response
+from flask import Flask, request, jsonify, render_template, Response
 from panxml2json import GetData
+import traceback
 
 
 app = Flask(__name__)
 
+@app.route("/vpnusermap.html")
+def vpnusermap():
+    return render_template('vpnusermap.html')
 
-@app.route("/")
+@app.route("/panxml2json")
 def panxml2json():
 
     try:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 TEMP_XML_FILE = "/tmp/xmlapioutput.xml"
-DEVICE_LIST_FILE = "./devicelist.csv"
+DEVICE_LIST_FILE = "../private/cfg/devicelist.csv"
 
 def ReadDevices(device_list_file = DEVICE_LIST_FILE):
 
@@ -117,29 +117,23 @@ def GetData(params = {}):
        'show_routing_protocol_bgp_rib-out-detail': "BGP Rib Out Detailed",
     }
 
-    data = []
-
-    if command == 'list_devices':
-        devices = ReadDevices()
-        for device in devices:
-             data.append(dict(hostname = device['hostname']))
-        return data
-
     if command == 'list_commands':
-
-        for key, value in command_list.items():
-              data.append({key: value})
-        return data
-
-    if not command in command_list:
-        raise("Command not in command list")
+        return [{key: value} for key, value in command_list.items()]
 
     devices = ReadDevices()
-    for _ in devices:
-         if 'device_name' in params and _['hostname'] != device_name:
+
+    if command == 'list_devices':
+        return [dict(hostname = device['hostname']) for device in devices]
+
+    assert command in command_list, f"Command '{command}' not in command list"
+
+    data = []
+    for device in devices:
+         hostname = device.get('hostname')
+         if 'device_name' in params and hostname != device_name:
              continue
          cmd = command.replace("_", " ")
-         MakeXMLAPICall(_['hostname'], _['api_key'], cmd)
+         MakeXMLAPICall(hostname, device.get('api_key'), cmd)
          data.extend(ReadXMLFile())
 
     return data

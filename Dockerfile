@@ -1,6 +1,8 @@
 FROM python:3.8-slim-bullseye
+WORKDIR /tmp
+COPY ./requirements.txt ./
 RUN pip3 install --upgrade pip
-RUN pip3 install flask gunicorn
+RUN pip3 install -r requirements.txt
 ENV PORT=8081
 ENV FLASK_DIR=/opt
 COPY wsgi.py $FLASK_DIR
