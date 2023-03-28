@@ -49,13 +49,13 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
         stdout = process.stdout.read()
         stderr = process.stderr.read()
     except Exception as e:
-        raise Exception("Subprocess command failed:", stderr.decode("utf-8"))
+        quit("Subprocess command failed:", stderr.decode("utf-8"))
 
     # Write to temp file
     if stdout:
         lines = stdout.decode("utf-8").splitlines()
     else:
-        raise Exception("Subprocess command failed:", stderr.decode("utf-8"))
+        quit("Subprocess command failed:", stderr.decode("utf-8"))
 
     #lines = output.splitlines()
     fh = open(TEMP_XML_FILE, "w")
