@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 
-TEMP_XML_FILE = "/tmp/xmlapioutput.xml"
+from os import path
+from platform import system
+
+TEMP_XML_FILE = "./xmlapioutput.xml"
 DEVICE_LIST_FILE = "../private/cfg/devicelist.csv"
 
-def ReadDevices(device_list_file = DEVICE_LIST_FILE):
-
-    from os import path
+def read_devices(device_list_file = DEVICE_LIST_FILE):
 
     devices = []
 
     PWD = path.realpath(path.dirname(__file__))
     device_list_file = path.join(PWD, device_list_file)
+    if system().lower().startswith("win"):
+        device_list_file = device_list_file.replace("/","\\")
 
     fh = open(device_list_file, "r")
     while fh:
@@ -24,10 +27,9 @@ def ReadDevices(device_list_file = DEVICE_LIST_FILE):
 
     return devices
 
-def MakeXMLAPICall(hostname, api_key, cli_command):
+def make_xml_api_call(hostname, api_key, cli_command):
 
     from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
-    from os import path
 
     # Location of panxapi.py 
     panxapi_location = "pan-python-0.16.0/bin/panxapi.py"
@@ -39,23 +41,28 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
     for i in range(len(words)-1, -1,-1):
         xml_command += "</"+ words[i] +">"
 
-    PWD = path.realpath(path.dirname(__file__))
-    panxapi_location = path.join(PWD, panxapi_location)
+
+    #PWD = path.realpath(path.dirname(__file__))
+    #panxapi_location = path.join(PWD, panxapi_location)
+    if system().lower().startswith("win"):
+        panxapi_location = panxapi_location.replace("/","\\")
+        #panxapi_location = panxapi_location.replace(" ","\ ")
 
     api_command = "{} -h {} -K \"{}\" -x -o \"{}\"".format(panxapi_location, hostname, api_key, xml_command)
+    #print(api_command)
 
     try:
         process = Popen(api_command, stdout=PIPE, stderr=PIPE, shell=True)
         stdout = process.stdout.read()
         stderr = process.stderr.read()
     except Exception as e:
-        quit("Subprocess command failed:", stderr.decode("utf-8"))
+        raise RuntimeError(e)
 
     # Write to temp file
     if stdout:
         lines = stdout.decode("utf-8").splitlines()
     else:
-        quit("Subprocess command failed:", stderr.decode("utf-8"))
+        raise RuntimeError("Subprocess command failed: {}".format(stderr.decode("utf-8")))
 
     #lines = output.splitlines()
     fh = open(TEMP_XML_FILE, "w")
@@ -65,7 +72,7 @@ def MakeXMLAPICall(hostname, api_key, cli_command):
     finally:
         fh.close()
 
-def ReadXMLFile():
+def read_xml_file():
 
     import xml.etree.ElementTree
     from os import remove
@@ -98,7 +105,7 @@ def ReadXMLFile():
 
     return entries
 
-def GetData(params = {}):
+def get_data(params = {}):
 
     command = params.get('command', 'show_admins')
     device_name = params.get('device_name', '')
@@ -116,15 +123,13 @@ def GetData(params = {}):
        'show_routing_protocol_bgp_rib-out': "BGP Rib Out",
        'show_routing_protocol_bgp_rib-out-detail': "BGP Rib Out Detailed",
     }
-
     if command == 'list_commands':
         return [{key: value} for key, value in command_list.items()]
 
-    devices = ReadDevices()
+    devices = read_devices()
 
     if command == 'list_devices':
         return [dict(hostname = device['hostname']) for device in devices]
-
     assert command in command_list, f"Command '{command}' not in command list"
 
     data = []
@@ -133,7 +138,7 @@ def GetData(params = {}):
          if 'device_name' in params and hostname != device_name:
              continue
          cmd = command.replace("_", " ")
-         MakeXMLAPICall(hostname, device.get('api_key'), cmd)
-         data.extend(ReadXMLFile())
+         make_xml_api_call(hostname, device.get('api_key'), cmd)
+         data.extend(read_xml_file())
 
     return data

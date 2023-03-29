@@ -16,7 +16,23 @@ if (location.protocol !== 'https:' ) {
     let newURL = 'https://' + window.location.hostname + window.location.pathname + window.location.search;
     window.location.replace(newURL);
 }
-	
+
+const MakeAjaxCall = async (url, options) => {
+
+    if (options == undefined)
+        options = {method: 'GET', mode: 'cors', cache: 'no-cache'};
+
+    const ajax_request = new Request(url, options);
+    const ajax_response = await fetch(ajax_request);
+
+    if (ajax_response.ok) {
+        const json_data = await ajax_response.json();
+        return Promise.resolve(json_data);
+    } else {
+        return Promise.reject('Ajax call failed:', ajax_request);
+   }
+}
+
 </script>
 
 
@@ -31,16 +47,13 @@ if (location.protocol !== 'https:' ) {
 <input type=submit></form>
 <!-- End device drop-down form -->
 
-<!-- Load script with handy functions -->
-<script src="static/ajax-functions.js"></script>
 
 <!-- Populate device selector drop-down -->
 <script>
 
 (async() => {
 
-    let wsgi_script = "/panxml2json.wsgi";
-
+    let wsgi_script = "./panxml2json";
     // Populate Drop-down with List of Commands
     MakeAjaxCall(wsgi_script + "?command=list_devices").then(data => {
         const selector = document.getElementById('device_list')
@@ -58,7 +71,7 @@ if (location.protocol !== 'https:' ) {
 </script>
 
 <!-- Load Google Maps Functions -->
-<script src="static/map-functions.js"></script>
+<script src="https://code.whamola.net/js/map-functions.js"></script>
 
 <script>
 
@@ -111,15 +124,14 @@ function PlotSession(session, geoip) {
 // Retreive Remote Access session data
 (async() => {
 
-    let wsgi_script = "/panxml2json.wsgi";
-
+    let wsgi_script = "./panxml2json";
     let params = "command=show_global-protect-gateway_current-user"
     if (get_params["device_name"])
         params += "&device_name=" + get_params["device_name"];
 
     MakeAjaxCall(wsgi_script + "?" + params).then(user_sessions => {
         //console.log("Session data len:" + user_sessions.length);
-        let geoip_url = "https://us-west1.gcp.whamola.net/wsgi/geoip";
+        let geoip_url = "https://whamola.net/wsgi/geoip";
         for (const user_info of user_sessions) {            
             geoip_url += "/" + user_info.public_ip;
         }

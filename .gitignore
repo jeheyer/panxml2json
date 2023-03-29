@@ -5,7 +5,4 @@ __pycache__/
 .idea/*
 *.core
 *.csv
-
-
-
-
+*.xml
