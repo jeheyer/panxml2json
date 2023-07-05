@@ -1,19 +1,31 @@
-#!/usr/bin/env python3
-
-from os import path
-from platform import system
+import yaml
+import pathlib
+import os
+import platform
 
 TEMP_XML_FILE = "./xmlapioutput.xml"
-DEVICE_LIST_FILE = "../private/cfg/devicelist.csv"
+DEVICE_LIST_FILE = "../../private/cfg/devicelist.csv"
+SETTINGS_FILE = "./settings.yaml"
 
-def read_devices(device_list_file = DEVICE_LIST_FILE):
+
+def read_settings(settings_file=SETTINGS_FILE):
+
+    path = pathlib.Path(settings_file)
+    if path.is_file():
+        info = os.stat(settings_file)
+        with open(settings_file) as file:
+            return yaml.load(file, Loader=yaml.FullLoader)
+    return {}
+
+
+def read_devices():
 
     devices = []
 
-    PWD = path.realpath(path.dirname(__file__))
-    device_list_file = path.join(PWD, device_list_file)
-    if system().lower().startswith("win"):
-        device_list_file = device_list_file.replace("/","\\")
+    pwd = os.path.realpath(os.path.dirname(__file__))
+    device_list_file = os.path.join(pwd, DEVICE_LIST_FILE)
+    if platform.system().lower().startswith("win"):
+        device_list_file = device_list_file.replace("/", "\\")
 
     fh = open(device_list_file, "r")
     while fh:
@@ -27,6 +39,7 @@ def read_devices(device_list_file = DEVICE_LIST_FILE):
 
     return devices
 
+
 def make_xml_api_call(hostname, api_key, cli_command):
 
     from subprocess import Popen, PIPE, check_output, getstatusoutput, STDOUT
@@ -37,19 +50,14 @@ def make_xml_api_call(hostname, api_key, cli_command):
     xml_command = ""
     words = cli_command.split(" ")
     for i in range(len(words)):
-        xml_command += "<"+ words[i] +">"
+        xml_command += "<" + words[i] + ">"
     for i in range(len(words)-1, -1,-1):
-        xml_command += "</"+ words[i] +">"
+        xml_command += "</" + words[i] + ">"
 
-
-    #PWD = path.realpath(path.dirname(__file__))
-    #panxapi_location = path.join(PWD, panxapi_location)
-    if system().lower().startswith("win"):
-        panxapi_location = panxapi_location.replace("/","\\")
-        #panxapi_location = panxapi_location.replace(" ","\ ")
+    if platform.system().lower().startswith("win"):
+        panxapi_location = panxapi_location.replace("/", "\\")
 
     api_command = "{} -h {} -K \"{}\" -x -o \"{}\"".format(panxapi_location, hostname, api_key, xml_command)
-    #print(api_command)
 
     try:
         process = Popen(api_command, stdout=PIPE, stderr=PIPE, shell=True)
@@ -64,7 +72,6 @@ def make_xml_api_call(hostname, api_key, cli_command):
     else:
         raise RuntimeError("Subprocess command failed: {}".format(stderr.decode("utf-8")))
 
-    #lines = output.splitlines()
     fh = open(TEMP_XML_FILE, "w")
     try:
         for line in lines:
@@ -72,10 +79,10 @@ def make_xml_api_call(hostname, api_key, cli_command):
     finally:
         fh.close()
 
+
 def read_xml_file():
 
     import xml.etree.ElementTree
-    from os import remove
 
     entries = []
     _ = xml.etree.ElementTree.iterparse(TEMP_XML_FILE, events=('end', ))
@@ -91,7 +98,7 @@ def read_xml_file():
                         value = int(value)
                     else:
                         value = value.rstrip()
-                except:
+                except Exception:
                     value = None
 
                 if child.tag != "entry":
@@ -101,9 +108,10 @@ def read_xml_file():
             entries.append(entry)
 
     # Cleanup Temp XML file
-    remove(TEMP_XML_FILE)
+    os.remove(TEMP_XML_FILE)
 
     return entries
+
 
 def get_data(params = {}):
 
@@ -124,7 +132,8 @@ def get_data(params = {}):
        'show_routing_protocol_bgp_rib-out-detail': "BGP Rib Out Detailed",
     }
     if command == 'list_commands':
-        return [{key: value} for key, value in command_list.items()]
+        return command_list
+        #return [{key: value} for key, value in command_list.items()]
 
     devices = read_devices()
 
@@ -134,11 +143,11 @@ def get_data(params = {}):
 
     data = []
     for device in devices:
-         hostname = device.get('hostname')
-         if 'device_name' in params and hostname != device_name:
-             continue
-         cmd = command.replace("_", " ")
-         make_xml_api_call(hostname, device.get('api_key'), cmd)
-         data.extend(read_xml_file())
+        hostname = device.get('hostname')
+        if 'device_name' in params and hostname != device_name:
+            continue
+        cmd = command.replace("_", " ")
+        make_xml_api_call(hostname, device.get('api_key'), cmd)
+        data.extend(read_xml_file())
 
     return data

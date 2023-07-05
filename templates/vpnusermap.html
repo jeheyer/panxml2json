@@ -17,6 +17,11 @@ if (location.protocol !== 'https:' ) {
     window.location.replace(newURL);
 }
 
+var get_params = {}
+location.search.substr(1).split("&").forEach(function(item) {
+  get_params[item.split("=")[0]] = item.split("=")[1];
+});
+
 const MakeAjaxCall = async (url, options) => {
 
     if (options == undefined)
@@ -35,60 +40,37 @@ const MakeAjaxCall = async (url, options) => {
 
 </script>
 
-
 <!-- Begin device drop-down form -->
 <form id="device_selector" method="GET" action="">
 <fieldset>
     <legend>Device:</legend>
     <select name="device_name" id="device_list">
         <option value="">All Devices</option>
+        {% for device in device_list %}
+        <option value="{{device.hostname}}"{% if device.hostname == device_name %} selected{% endif %}>{{device.hostname}}</option>
+        {% endfor %}
     </select>
 </fieldset>
 <input type=submit></form>
 <!-- End device drop-down form -->
 
-
-<!-- Populate device selector drop-down -->
-<script>
-
-(async() => {
-
-    let wsgi_script = "./panxml2json";
-    // Populate Drop-down with List of Commands
-    MakeAjaxCall(wsgi_script + "?command=list_devices").then(data => {
-        const selector = document.getElementById('device_list')
-        for (const obj of data) {
-            let option = document.createElement("option");
-            option.value = obj.hostname;
-            option.text = obj.hostname;
-            selector.add(option);
-            if (option.value == get_params["device_name"])
-                option.selected = true;
-        }
-    }).catch(console.log);
-})();
-
-</script>
-
 <!-- Load Google Maps Functions -->
 <script src="https://code.whamola.net/js/map-functions.js"></script>
 
 <script>
-
-// Initialize locations array
-var locations = new Array();	 
-locations[0] = { title: "My Location", lat: null, lng: null};
-
+  // Initialize locations array
+  var locations = new Array();	 
+  locations[0] = { title: "My Location", lat: null, lng: null};
 </script>
 
 <!-- Initialize Map -->
 <div id='map'>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRxoCyNleUUujra18-Ii-BW2gAIhAkLr8&callback=initMap"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&callback=initMap"></script>
 </div>
 
 <script>
 
-function PlotSession(session, geoip) {
+  function PlotSession(session, geoip) {
     //console.log(session, geoip);
     if (geoip.country_code) {
       let location_info = {};
@@ -118,11 +100,10 @@ function PlotSession(session, geoip) {
       PlotMarker(location_info);
       map.fitBounds(bounds);
     }
-}
+  }
 
-
-// Retreive Remote Access session data
-(async() => {
+  // Retrieve Remote Access session data
+  (async() => {
 
     let wsgi_script = "./panxml2json";
     let params = "command=show_global-protect-gateway_current-user"
@@ -130,32 +111,26 @@ function PlotSession(session, geoip) {
         params += "&device_name=" + get_params["device_name"];
 
     MakeAjaxCall(wsgi_script + "?" + params).then(user_sessions => {
-        //console.log("Session data len:" + user_sessions.length);
-        let geoip_url = "https://whamola.net/wsgi/geoip";
+        let geoip_url = "https://code.whamola.net/geoip";
         for (const user_info of user_sessions) {            
             geoip_url += "/" + user_info.public_ip;
         }
         var geoip_table = {};
         MakeAjaxCall(geoip_url).then(geoip_data => {
-            //console.log("GeoIP data len:" + geoip_data.length);
             for (const geoip of geoip_data) {
                 geoip_table[geoip.ipv4_address] = geoip;
-                //console.log(geoip.ipv4_address);
             }
-            //console.log(geoip_table);
-            for (const user_info of user_sessions) { 
+            for (const user_info of user_sessions) {
                 geoip = geoip_table[user_info.public_ip];
                 PlotSession(user_info, geoip);
             }
         }).catch(console.log)
-        //console.log(geoip_table);
     }).catch(console.log)
         
     // Re-zoom map boundary one final time
     map.panToBounds(bounds);
 
-})();
-
+  })();
 </script>
 
 </body>
